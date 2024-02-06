@@ -18,7 +18,7 @@ RUN export arch=`bash -c 'if [ "$(uname -m)" = x86_64 ]; then echo x64; elif [ "
 RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
 
 # Helpful utils
-RUN apt-get install -y --no-install-recommends openssh-client ca-certificates curl wget
+RUN apt-get install -y --no-install-recommends openssh-client ca-certificates curl wget fuse-overlayfs
 
 # Docker
 RUN install -m 0755 -d /etc/apt/keyrings \
@@ -31,8 +31,10 @@ $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
     && apt-get update -y \
     && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-COPY start.sh start.sh
+COPY start.sh /start.sh
+
+RUN mkdir /data && chown -R docker /data
 
 USER docker
 
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["/start.sh"]
