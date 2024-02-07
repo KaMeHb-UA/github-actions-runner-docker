@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ "$EUID" = '0' ]; then
+    if [ -e /var/run/docker.sock ]; then
+        chmod 666 /var/run/docker.sock
+    fi
+    chown -R docker /data
+    exec su docker -c "$0"
+    exit 0
+fi
+
 mkdir -p /data/data
 mkdir -p /data/.work
 mkdir -p /home/docker/workdir

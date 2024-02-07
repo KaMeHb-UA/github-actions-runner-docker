@@ -38,6 +38,6 @@ COPY start.sh /start.sh
 
 RUN mkdir /data && chown -R docker /data
 
-USER docker
+USER root
 
 ENTRYPOINT ["/start.sh"]
