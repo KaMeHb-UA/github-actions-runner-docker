@@ -25,7 +25,7 @@ cd /home/docker/workdir
 
 if [ ! -f .credentials ]; then
     echo "First launch, need a TOKEN environment variable to be specified to continue configuration"
-    ./config.sh --url ${URL} --token ${TOKEN}
+    ./config.sh --url ${URL} --token ${TOKEN} --disableupdate
 fi
 
 ./run.sh & wait $!
