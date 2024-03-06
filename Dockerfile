@@ -10,10 +10,14 @@ RUN apt-get install -y --no-install-recommends \
     curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip
 
 RUN export arch=`bash -c 'if [ "$(uname -m)" = x86_64 ]; then echo x64; elif [ "$(uname -m)" = aarch64 ]; then echo arm64; else echo arm; fi'` \
+    && export debarch=`bash -c 'if [ "$(uname -m)" = x86_64 ]; then echo amd64; elif [ "$(uname -m)" = aarch64 ]; then echo arm64; else echo armhf; fi'` \
+    && export link=`bash -c 'if [ "$(uname -m)" = x86_64 ]; then echo "http://archive.ubuntu.com/ubuntu"; else echo "http://ports.ubuntu.com/ubuntu-ports"; fi'` \
     && cd /home/docker && mkdir actions-runner && cd actions-runner \
+    && sh -c "curl -O -L ${link}/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.22_${debarch}.deb" \
     && sh -c "curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz" \
+    && sh -c "dpkg -i libssl1.1_1.1.1f-1ubuntu2.22_${debarch}.deb" \
     && sh -c "tar xzf actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz" \
-    && sh -c "rm actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz"
+    && sh -c "rm actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz libssl1.1_1.1.1f-1ubuntu2.22_${debarch}.deb"
 
 RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
 
