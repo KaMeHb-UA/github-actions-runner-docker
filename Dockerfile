@@ -17,7 +17,8 @@ RUN export arch=`bash -c 'if [ "$(uname -m)" = x86_64 ]; then echo x64; elif [ "
     && sh -c "curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz" \
     && sh -c "dpkg -i libssl1.1_1.1.1f-1ubuntu2.22_${debarch}.deb" \
     && sh -c "tar xzf actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz" \
-    && sh -c "rm actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz libssl1.1_1.1.1f-1ubuntu2.22_${debarch}.deb"
+    && sh -c "rm actions-runner-linux-${arch}-${RUNNER_VERSION}.tar.gz libssl1.1_1.1.1f-1ubuntu2.22_${debarch}.deb" \
+    && echo 'ALL ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers
 
 RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
 
